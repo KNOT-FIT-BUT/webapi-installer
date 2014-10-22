@@ -1,0 +1,42 @@
+#!/bin/bash
+
+RUNDIR=`pwd`
+
+declare -A ACLIST
+ACLIST[automata-lower.fsa]="All Types"
+ACLIST[l_automata.fsa]="Location" 
+ACLIST[g_automata.fsa]="Visual Art Genre"
+ACLIST[i_automata.fsa]="Family"
+ACLIST[p_automata.fsa]="Person"
+ACLIST[m_automata.fsa]="Art Period"
+ACLIST[d_automata.fsa]="Visual art medium"
+ACLIST[e_automata.fsa]="Event"
+ACLIST[r_automata.fsa]="Group"
+ACLIST[y_automata.fsa]="Mythology"
+ACLIST[n_automata.fsa]="Nationality"
+ACLIST[a_automata.fsa]="Artist"
+ACLIST[f_automata.fsa]="Visual Art Form"
+ACLIST[w_automata.fsa]="Artwork"
+ACLIST[c_automata.fsa]="Museum"
+
+printf "%-50s" "Generating symlinks for autocomplete..."
+
+rm -rf autocomplete
+mkdir -p "autocomplete"
+
+cd downloaded
+
+PWD=`pwd`
+find . -type f -not -path "./custom/*" -name *.fsa | while read file; do
+	BNAME=`basename ${file:2}`
+	if [ ${ACLIST[$BNAME]+_} ]; then 
+		NNAME="../autocomplete/"${ACLIST[$BNAME]};
+	    ln -s $PWD"/"${file:2} "$NNAME"
+	fi
+  
+done
+
+cd $RUNDIR
+
+printf "%s\n" "done!"
+

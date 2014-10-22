@@ -1,0 +1,6 @@
+#!/bin/bash
+
+virtualenv py
+. py/bin/activate
+pip install -r venv-requirements.list
+deactivate
