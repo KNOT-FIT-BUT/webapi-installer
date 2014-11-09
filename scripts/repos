@@ -1,0 +1,60 @@
+#!/bin/bash
+
+scriptpath=$(readlink -f $0)
+basedir=$(dirname ${scriptpath})
+repolist=$basedir/repositories.list
+. $basedir/install.conf
+
+echo $basedir
+echo $repolist
+
+function git_clone(){
+    git clone $1
+}
+
+function git_update(){
+    cd $1
+    git reset --hard HEAD
+	git clean -f -d
+	git pull
+	cd ..
+}
+
+
+function init(){
+    cd $repositories
+    cat $repolist | while read repository; do
+	    git_clone ${repository}
+    done
+    cd ..
+}
+
+function update(){
+ echo "updating"
+
+}
+
+function clean(){
+    echo "housekeeping"
+
+}
+
+while [ "$1" != "" ]; do
+    case $1 in
+		-i | --init )           init
+		                        exit
+                                ;;
+        -u | --update )         update
+                                exit
+                                ;;
+		-c | --clean )          clean
+        						exit
+                                ;;
+        -h | --help )           help
+                                exit
+                                ;;
+        *)                      help
+                                exit
+    esac
+    shift
+done

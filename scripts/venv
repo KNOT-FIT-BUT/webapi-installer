@@ -1,0 +1,46 @@
+#!/bin/bash
+
+. install.conf
+
+function init(){
+
+    virtualenv $venv
+    . $venv/bin/activate
+    pip install -r venv-requirements.list
+    deactivate
+
+}
+
+function update(){
+    . $venv/bin/activate
+    pip uninstall -r venv-requirements.list
+    pip install -r venv-requirements.list
+    deacitave
+}
+
+function clean(){
+    rm -rf $venv
+}
+
+
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -i | --init )           init
+		                        exit
+                                ;;
+        -u | --update )         update
+                                exit
+                                ;;
+		-c | --clean )          clean
+        						exit
+                                ;;
+        -h | --help )           help
+                                exit
+                                ;;
+        *)                      help
+                                exit
+    esac
+    shift
+done
