@@ -1,4 +1,13 @@
-https://github.com/KNOT-GIT/webapi-ui-figatools.git
-https://github.com/KNOT-GIT/webapi-ui-annotator.git
-https://github.com/KNOT-GIT/webapi-server.git
-ssh://knot09.fit.vutbr.cz/var/decipher/secapi
+#!/bin/bash
+
+declare -A secapi
+declare -A webapi_ui_figatools
+declare -A webapi_ui_annotator
+declare -A webapi_server
+
+repository_conf=(secapi webapi_ui_figatools webapi_ui_annotator webapi_server)
+
+secapi=([url]=ssh://xjerab13@knot09.fit.vutbr.cz/var/decipher/secapi)
+webapi_ui_figatools=([url]=https://github.com/KNOT-GIT/webapi-ui-figatools.git)
+webapi_ui_annotator=([url]=https://github.com/KNOT-GIT/webapi-ui-annotator.git)
+webapi_server=([url]=https://github.com/KNOT-GIT/webapi-server.git)

@@ -2,7 +2,7 @@
 
 scriptpath=$(readlink -f $0)
 basedir=$(dirname ${scriptpath})
-repolist=$basedir/repositories.list
+repoconf=$basedir/repositories.list
 . $basedir/install.conf
 
 echo $basedir
@@ -22,9 +22,11 @@ function git_update(){
 
 
 function init(){
+    . $repoconf
     cd $repositories
-    cat $repolist | while read repository; do
-	    git_clone ${repository}
+    for repository in ${repository_conf[@]}; do
+        a=`eval "echo \$$repository`
+	    echo git clone ${a[@]}
     done
     cd ..
 }
@@ -36,7 +38,7 @@ function update(){
 
 function clean(){
     echo "housekeeping"
-
+    rm -rf $repositories/*
 }
 
 while [ "$1" != "" ]; do

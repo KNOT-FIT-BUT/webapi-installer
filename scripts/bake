@@ -1,0 +1,45 @@
+#!/bin/bash
+
+scriptpath=$(readlink -f $0)
+basedir=$(dirname ${scriptpath})
+repolist=$basedir/repositories.list
+. $basedir/install.conf
+
+
+function copy(){
+    cp -r repositories/secapi/NER $wapi_lib
+    cp -r repositories/secapi/SharedKB $wapi_lib
+    cp -r repositories/secapi/HEAD-KB $wapi_assets_data/custom
+
+}
+
+function build(){
+    cd $wapi_lib
+	make -C SharedKB/var2/
+	make -C NER/figa/sources/
+	make -C NER/figa/make_automat/
+}
+
+function clean(){
+    rm -rf $wapi_lib/*
+}
+
+while [ "$1" != "" ]; do
+    case $1 in
+		-c | --copy )           copy
+		                        exit
+                                ;;
+        -b | --build )          build
+                                exit
+                                ;;
+		-p | --purge )          clean
+        						exit
+                                ;;
+        -h | --help )           help
+                                exit
+                                ;;
+        *)                      help
+                                exit
+    esac
+    shift
+done

@@ -6,6 +6,11 @@ basedir=$(dirname $0)
 function init(){
     mkdir -p $repositories
 	mkdir -p $server
+	mkdir -p $wapi_assets_data
+	mkdir -p $wapi_assets_data/custom
+	mkdir -p $wapi_assets_data/downloaded
+	mkdir -p $wapi_assets_data/static
+	mkdir -p $server/logs
 }
 
 function update(){

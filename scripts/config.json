@@ -1,0 +1,72 @@
+{
+    "global":{
+        "base":"",
+        "verbose":""
+    },
+    "dirs":{
+        "prefix":"@/dirs/repositories",
+        "venv":"py",
+        "scripts":"scripts",
+        "repositories":"repositories",
+        "wapi":"server",
+        "wapi.libs":["@/dirs/wapi","libs"],
+        "wapi.assets_conf":["@/dirs/wapi","assets"],
+        "wapi.assets_data":["@/dirs/wapi","assets","data"],
+        "wapi.ui":["@/dirs/wapi","static3"]
+    },
+    "venv":{
+        "requirements":"venv-requirements.list"
+    },
+    "repositories":{
+        "prefix":"@/dirs/repositories",
+        "rep":[
+            {
+                "name":"",
+                "url":"ssh://knot09.fit.vutbr.cz/var/decipher/secapi",
+                "prefix":"secapi",
+                "copy":[
+                    {"from":"NER","to":["@/dirs/wapi.libs","NER"]},
+                    {"from":"SharedKB","to":["@/dirs/wapi.libs","NER"]}
+                ],
+                "build":[
+                    {
+                        "prefix":"@/dirs/wapi.libs",
+                        "cmd":"make -C",
+                        "target":[
+                            "SharedKB/var2/",
+                            "NER/figa/sources/",
+                            "NER/figa/make_automat/"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name":"",
+                "url":"https://github.com/KNOT-GIT/webapi-server.git",
+                "prefix":"webapi-server",
+                "copy":[
+                    {"from":".","to":"@/dirs/wapi"}
+                ]
+            },
+            {
+                "name":"",
+                "url":"https://github.com/KNOT-GIT/webapi-ui-annotator.git",
+                "prefix":"webapi-ui-annotator",
+                "copy":[
+                    {"from":"build","to":["@/dirs/wapi.ui","annotator"]}
+                ]
+            },
+            {
+                "name":"",
+                "url":"https://github.com/KNOT-GIT/webapi-ui-figatools.git",
+                "prefix":"webapi-ui-figatools",
+                "copy":[
+                    {"from":"build","to":["@/dirs/wapi.ui","figatools"]}
+                ]
+            }
+        ]
+    }
+
+}
+
+
