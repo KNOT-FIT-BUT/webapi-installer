@@ -5,10 +5,10 @@ THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
 function install(){
-# $SCRIPT_DIR"create-venv"
-# $SCRIPT_DIR"clone-repos" install
-# $SCRIPT_DIR"deploy-server" install
-# $SCRIPT_DIR"deploy-ui" install
+ $SCRIPT_DIR"create-venv"
+ $SCRIPT_DIR"clone-repos" install
+ $SCRIPT_DIR"deploy-server" install
+ $SCRIPT_DIR"deploy-ui" install
  $SCRIPT_DIR"deploy-secapi" install
  $SCRIPT_DIR"deploy-assets" install
  
