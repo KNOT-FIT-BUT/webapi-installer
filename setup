@@ -1,0 +1,43 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $THIS_PATH"/scripts/vars"
+
+
+function install(){
+# $SCRIPT_DIR"create-venv"
+# $SCRIPT_DIR"clone-repos" install
+# $SCRIPT_DIR"deploy-server" install
+# $SCRIPT_DIR"deploy-ui" install
+ $SCRIPT_DIR"deploy-secapi" install
+ $SCRIPT_DIR"deploy-assets" install
+ 
+
+}
+
+
+function clean(){
+
+rm -rf $PROJECT_DIR"py"
+rm -rf $PROJECT_DIR"server"
+rm -rf $PROJECT_DIR"repos"
+
+}
+
+while [ "$1" != "" ]; do
+    case $1 in
+        install )        install
+                         exit
+                         ;;
+        clean | clear )          clean
+                                exit
+                                ;;
+        gensymlinks | gs )      gen_symlinks
+                                exit
+                                ;;
+        *)
+                                exit 
+    esac
+    shift
+done
+

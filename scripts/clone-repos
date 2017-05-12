@@ -1,0 +1,62 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+function install(){
+	printf "%-50s" "Cloning repositories..."
+
+	mkdir $WORKDIR$GIT_DIR
+	cd $WORKDIR$GIT_DIR
+
+	git clone https://github.com/KNOT-FIT-BUT/webapi-ui-legacy.git --depth=1
+	git clone https://github.com/KNOT-FIT-BUT/webapi-ui-annotator.git --depth=1
+	git clone https://github.com/KNOT-FIT-BUT/webapi-server.git --depth=1
+	git clone $GIT_SECAPI_URL -b D114-NER --depth=1
+	
+	printf "%s\n" "done!"
+
+}
+
+
+function update(){
+printf "%-50s" "Updating repositories..."
+
+	cd $WORKDIR$GIT_DIR
+	for d in */ ; do
+	    echo "$d"
+            cd $d
+	    git pull 
+            cd ..
+	done
+printf "%s\n" "done!"
+
+}
+
+
+function clean(){
+printf "%-50s" "Cleaning repositories..."
+
+	rm -rf $WORKDIR$GIT_DIR
+printf "%s\n" "done!"
+
+}
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        update )         shift
+                         update
+                         exit
+                         ;;
+	install )        install
+	        	 exit
+                         ;;
+	clean | clear )          clean
+                                ;;
+        *)                     
+                                exit 
+    esac
+    shift
+done
+

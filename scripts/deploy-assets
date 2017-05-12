@@ -1,0 +1,102 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+function gen_symlinks(){
+
+cd $ASSETS_DATA"downloaded"
+
+printf "%-50s" "Generating symlinks for assets..."
+find . -type f -not -path "./custom/*" | while read file; do
+        rm -f $SECAPI_DST${file:2}
+        ln -s $ASSETS_DATA"downloaded/"${file:2} $SECAPI_DST${file:2}
+	
+done
+cd $SECAPI_DST
+cp -a KB.all ../
+cp -a KBstatsMetrics.all ../
+cd $ASSETS_DATA
+printf "%s\n" "done!"
+bash $SCRIPT_DIR"gen_autocomplete_symlinks"
+
+
+}
+
+function install(){
+
+mkdir -p $ASSETS_DATA"downloaded"
+cd $ASSETS_DATA"downloaded"
+VERSION=$(cat $GIT_DIR"/secapi/VERSION")
+printf "%-50s\n"  "Downloading assets..."
+grep "wget" $SECAPI_DST"downloadKB.sh" | while read line; do
+	line=$(echo $line | sed "s/\"\$VERSION\"/$VERSION/g" | sed "s/-O.*/-P figa/g")
+        $line
+done
+printf "%-50s%s\n%-50s" "Downloading assets..." "done!" "Generating custom assets..."
+cat ../custom/HEAD-KB KBstatsMetrics.all > ../custom/KB-HEAD.all
+ln -s $ASSETS_DATA"custom/KB-HEAD.all" $SERVER_API"/KB-HEAD.all"
+printf "%s\n" "done!"
+
+gen_symlinks
+
+}
+
+function update(){
+printf "%-50s" "Updating assets..."
+
+cd $ASSETS_DATA"downloaded"
+VERSION=$(cat $GIT_DIR"/secapi/VERSION")
+
+grep "wget" $SECAPI_DST"downloadKB.sh" | while read line; do
+        line=$(echo $line | sed "s/\"\$VERSION\"/$VERSION/g" | sed "s/-O.*/-P figa/g" | sed "s/wget */wget -N /g")
+        $line
+done
+
+cat ../custom/HEAD-KB KBstatsMetrics.all > ../custom/KB-HEAD.all
+
+printf "%s\n" "done!"
+
+
+}
+
+
+
+function clean(){
+printf "%-50s" "Cleaning assets..."
+
+rm -rf $ASSETS_DATA"downloaded"
+rm -f $ASSETS_DATA"custom/KB-HEAD.all"
+
+find -L $SECAPI_DST"/figa/" -xtype l | xargs rm -f 
+find -L $SERVER_API -maxdepth 1 -xtype l | xargs rm -f 
+
+
+
+
+printf "%s\n" "done!"
+
+}
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        update )         shift
+                         update
+                         exit
+                         ;;
+        install )        install
+                         exit
+                         ;;
+        clean | clear )          clean
+				exit
+                                ;;
+	gensymlinks | gs )	gen_symlinks
+				exit
+				;;
+        *)
+                                exit 
+    esac
+    shift
+done
+

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+
+function install(){
+
+printf "%-50s" "Deploying server..."
+
+
+cp -r $SERVER_SRC $SERVER_DST
+rm -rf $SERVER_DST".git"
+
+mkdir -p $SERVER_DST"logs"
+mkdir -p $SERVER_API"assets.conf"
+mkdir -p $SERVER_API"assets.data/"{autocomplete,custom,downloaded}
+
+printf "%s\n" "done!"
+
+}
+
+function update(){
+printf "%-50s" "Updating server..."
+
+   cp -r  $SERVER_SRC"." $SERVER_DST
+   rm -rf $SERVER_DST".git"
+   find $SERVER_DST -type f -name "*.pyc" | xargs rm -f
+
+printf "%s\n" "done!"
+
+}
+
+function clean(){
+printf "%-50s" "Deleting server..."
+
+ rm -rf $SERVER_DST
+
+printf "%s\n" "done!"
+
+}
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        update )         shift
+                         update
+                         exit
+                         ;;
+        install )        install
+                         exit
+                         ;;
+        clean | clear )          clean
+                                ;;
+        *)
+                                exit 
+    esac
+    shift
+done
+

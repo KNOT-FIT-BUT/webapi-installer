@@ -1,0 +1,112 @@
+#!/bin/bash
+# webapiner daemon
+# description: webapi daemon
+# processname: webapiner
+
+
+DAEMON_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $DAEMON_PATH"/scripts/vars"
+
+NAME=webapiner
+DESC="Webapiner init.d script."
+PIDFILE=$SERVER_DST"$NAME.pid"
+CHCKSTATUS=0
+
+function start(){
+
+    status
+
+    if [ $CHCKSTATUS -ne 0 ]; then
+        printf "%s\n" "Server is already running, abort."
+        exit
+
+    fi
+        printf "%-50s" "Starting $NAME..."
+        cd $SERVER_DST
+        screen -dmS $NAME sh run-venv.sh
+        for n in {1..10}
+        do
+            if [ -f $PIDFILE ]; then
+                break
+        else
+            sleep 1
+                fi
+        done
+    PID=$(cat $PIDFILE)
+    if [ ! -d "/proc/"$PID ]; then
+        printf "%s\n" "Failed!"
+    else
+        printf "%s\n" "Done!"
+    fi
+    cd $PWD
+
+
+}
+
+
+function status(){
+	printf "%-50s" "Checking $NAME..."
+        if [ -f $PIDFILE ]; then
+            PID=`cat $PIDFILE`
+            if [ ! -d "/proc/"$PID ]; then
+                printf "%s\n" "Process dead but pidfile exists. Removing pidfile"
+                rm -f $PIDFILE
+            else
+                echo "Running"
+                CHCKSTATUS=1
+            fi
+        else
+            printf "%s\n" "Service not running."
+            CHCKSTATUS=0
+        fi
+
+
+}
+
+function stop(){
+	 printf "%-50s" "Stopping $NAME..."
+        if [ -f $PIDFILE ]; then
+            PID=`cat $PIDFILE`
+            kill -SIGINT $PID
+            for n in {1..10}
+                do
+                    if [ -d "/proc/"$PID ]; then
+                        sleep 1
+                    else
+                        break
+                    fi
+                done
+                if [ -d "/proc/"$PID ]; then
+                        printf "%s\n" "Failed!"
+                        printf "%s %s\n" "Try manual kill process with PID: " $PID
+                else
+                        printf "%s\n" "Done!"
+                        rm -f $PIDFILE
+
+                fi
+        else
+            printf "%s\n" "pidfile not found"
+        fi
+
+}
+
+case "$1" in
+start)
+	start
+;;
+status)
+	status
+;;
+stop)
+	stop
+;;
+
+restart)
+  	$0 stop
+  	$0 start
+;;
+
+*)
+        echo "Usage: $0 {status|start|stop|restart}"
+        exit 1
+esac 

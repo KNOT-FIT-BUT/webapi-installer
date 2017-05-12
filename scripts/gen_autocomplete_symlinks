@@ -30,7 +30,7 @@ PWD=`pwd`
 find . -type f -not -path "./custom/*" -name *.fsa | while read file; do
 	BNAME=`basename ${file:2}`
 	if [ ${ACLIST[$BNAME]+_} ]; then 
-		NNAME="../autocomplete/"${ACLIST[$BNAME]};
+	    NNAME="../autocomplete/"${ACLIST[$BNAME]};
 	    ln -s $PWD"/"${file:2} "$NNAME"
 	fi
   

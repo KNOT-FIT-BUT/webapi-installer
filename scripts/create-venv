@@ -1,6 +1,14 @@
 #!/bin/bash
 
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+sudo apt-get update
+sudo apt-get install swig python-dev screen python-virtualenv
+
+
 virtualenv py
 . py/bin/activate
-pip install -r venv-requirements.list
+pip install -r $SCRIPT_DIR"venv-requirements.list"
 deactivate
+

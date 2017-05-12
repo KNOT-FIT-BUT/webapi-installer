@@ -1,0 +1,48 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+function install(){
+	printf "%-50s\n"  "Deploying UI..."
+	cp -r $UI_SRC $UI_DST
+	cp -r $UILEGACY_SRC $UILEGACY_DST
+
+	rm -rf $UILEGACY_DST".git"
+	rm -rf $UI_DST".git"
+
+	printf "%s\n" "done!"
+}
+
+function update(){
+	clean
+	install
+}
+
+function clean(){
+	printf "%-50s\n"  "Cleaning UI..."
+
+	rm -rf $UI_DST
+	rm -rf $UILEGACY_DST
+
+	printf "%s\n" "done!"
+
+}
+
+while [ "$1" != "" ]; do
+    case $1 in
+        update )         shift
+                         update
+                         exit
+                         ;;
+        install )        install
+                         exit
+                         ;;
+        clean | clear )          clean
+                                ;;
+        *)
+                                exit 
+    esac
+    shift
+done
+

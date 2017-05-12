@@ -1,0 +1,60 @@
+#!/bin/bash
+
+THIS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $THIS_PATH"/vars"
+
+function install(){
+printf "%-50s" "Deploying secapi..."
+
+cp -r $SECAPI_SRC $SECAPI_DST
+cp -r $SHAREDKB_SRC $SHAREDKB_DST
+
+cp -r $HEAD_KB $SERVER_API"assets.data/custom"
+
+cd $SERVER_API
+
+make -C SharedKB/var2/
+make -C NER/figa/sources/
+make -C NER/figa/make_automat/
+
+printf "%s\n" "done!"
+
+
+}
+
+function update(){
+ clean
+ install
+ cd $SCRIPT_DIR
+ ./deploy-assets gs
+ cd $CWD
+}
+
+function clean(){
+ printf "%-50s" "Cleaning secapi..."
+ rm -rf $SECAPI_DST
+ rm -rf $SHAREDKB_DST
+ printf "%s\n" "done!"
+
+
+}
+
+
+while [ "$1" != "" ]; do
+    case $1 in
+        update )         shift
+                         update
+                         exit
+                         ;;
+        install )        install
+                         exit
+                         ;;
+        clean | clear )          clean
+                                ;;
+        *)
+                                exit 
+    esac
+    shift
+done
+
+

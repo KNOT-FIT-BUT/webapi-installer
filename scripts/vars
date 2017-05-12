@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+CWD=$(pwd)"/"
+THIS_PATH=$(realpath "${BASH_SOURCE[0]}")"/"
+SCRIPT_DIR=$(dirname "$THIS_PATH")"/"
+cd $SCRIPT_DIR
+cd ..
+PROJECT_DIR=$(pwd)"/"
+GIT_DIR=$PROJECT_DIR"repos/"
+
+
+GIT_SSH_USER="ENTER_SSH_USERNAME@" 
+GIT_SECAPI_URL="ssh://"$GIT_SSH_USER"knot09.fit.vutbr.cz/var/decipher/secapi"
+
+SERVER_SRC=$GIT_DIR"webapi-server/"
+SERVER_DST=$PROJECT_DIR"server/"
+
+SERVER_API=$SERVER_DST"api/"
+
+ASSETS_DATA=$SERVER_API"assets.data/"
+
+SECAPI_SRC=$GIT_DIR"secapi/NER/"
+SECAPI_DST=$SERVER_API"NER/"
+
+SHAREDKB=$SERVER_API"SharedKB/var2/"
+
+SHAREDKB_SRC=$GIT_DIR"secapi/SharedKB/"
+SHAREDKB_DST=$SERVER_API"SharedKB/"
+
+HEAD_KB=$GIT_DIR"secapi/HEAD-KB"
+
+UILEGACY_SRC=$GIT_DIR"webapi-ui-legacy/"
+UILEGACY_DST=$SERVER_DST"static2/"
+
+UI_SRC=$GIT_DIR"webapi-ui-annotator/build/"
+UI_DST=$SERVER_DST"static3/"
+
